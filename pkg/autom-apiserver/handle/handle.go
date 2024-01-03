@@ -1,7 +1,7 @@
 package handle
 
 import (
-	"github.com/atompi/autom/cmd/options"
+	"github.com/atompi/autom/cmd/autom-apiserver/app/options"
 	"go.uber.org/zap"
 )
 

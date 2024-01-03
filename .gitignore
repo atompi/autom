@@ -21,6 +21,4 @@
 go.work
 
 # Dev tmp
-autom
-autom.yaml
-logs/
+dist/

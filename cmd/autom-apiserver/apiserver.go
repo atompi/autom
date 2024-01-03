@@ -15,8 +15,8 @@ limitations under the License.
 */
 package main
 
-import "github.com/atompi/autom/cmd"
+import "github.com/atompi/autom/cmd/autom-apiserver/app"
 
 func main() {
-	cmd.Execute()
+	app.Execute()
 }

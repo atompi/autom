@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package cmd
+package app
 
 import (
 	"fmt"
@@ -21,8 +21,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/atompi/autom/cmd/options"
-	"github.com/atompi/autom/pkg/handle"
+	"github.com/atompi/autom/cmd/autom-apiserver/app/options"
+	"github.com/atompi/autom/pkg/autom-apiserver/handle"
 	logkit "github.com/atompi/go-kits/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -33,12 +33,12 @@ var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "autom",
-	Short: "Next-generation XOps platform",
-	Long: `This is a next-generation XOps platform that allows
-you to accomplish nearly all operational tasks.
-For example, you can manage hosts in a manner
-similar to how Kubernetes manages pods.`,
+	Use:   "autom-apiserver",
+	Short: "AutoM API server",
+	Long: `The AutoM API server validates and configures data
+for the api objects. The API Server services REST
+operations and provides the frontend to the cluster's
+shared state through which all other components interact.`,
 	Version: options.Version,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
@@ -75,7 +75,7 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "config file (default is ./autom.yaml)")
+	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "config file (default is ./autom-apiserver.yaml)")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -84,10 +84,10 @@ func initConfig() {
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
 	} else {
-		// Search config in home directory with name ".autom" (without extension).
+		// Search config in home directory with name "autom-apiserver" (without extension).
 		viper.AddConfigPath("./")
 		viper.SetConfigType("yaml")
-		viper.SetConfigName("autom")
+		viper.SetConfigName("autom-apiserver")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match

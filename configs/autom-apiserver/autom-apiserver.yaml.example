@@ -2,4 +2,4 @@ core:
   threads: 4
   log:
     level: INFO
-    path: ./logs/autom.log
+    path: ./logs/autom-apiserver.log
