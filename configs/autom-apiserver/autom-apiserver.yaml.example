@@ -1,5 +1,10 @@
 core:
+  mode: debug
   threads: 4
   log:
     level: INFO
     path: ./logs/autom-apiserver.log
+
+api:
+  listen: :1948
+  path: /api/v1/status

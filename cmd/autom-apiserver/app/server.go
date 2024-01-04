@@ -18,12 +18,13 @@ package app
 import (
 	"fmt"
 	"os"
-	"os/signal"
-	"syscall"
+	"time"
 
 	"github.com/atompi/autom/cmd/autom-apiserver/app/options"
-	"github.com/atompi/autom/pkg/autom-apiserver/handle"
+	"github.com/atompi/autom/pkg/autom-apiserver/api/v1/router"
 	logkit "github.com/atompi/go-kits/log"
+	ginzap "github.com/gin-contrib/zap"
+	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
@@ -52,10 +53,12 @@ shared state through which all other components interact.`,
 		undo := zap.ReplaceGlobals(logger)
 		defer undo()
 
-		sig := make(chan os.Signal, 1)
-		signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
-		handle.Handle(opts)
-		<-sig
+		gin.SetMode(opts.Core.Mode)
+		r := gin.New()
+		r.Use(ginzap.Ginzap(logger, time.RFC3339, true))
+		r.Use(ginzap.RecoveryWithZap(logger, true))
+		router.Register(r, opts)
+		r.Run(opts.API.Listen)
 	},
 }
 

@@ -15,12 +15,19 @@ type LogOptions struct {
 }
 
 type CoreOptions struct {
+	Mode    string     `yaml:"mode"`
 	Threads int        `yaml:"threads"`
 	Log     LogOptions `yaml:"log"`
 }
 
+type APIOptions struct {
+	Listen string `yaml:"listen"`
+	Path   string `yaml:"path"`
+}
+
 type Options struct {
 	Core CoreOptions `yaml:"core"`
+	API  APIOptions  `yaml:"api"`
 }
 
 func NewOptions() (opts Options) {
