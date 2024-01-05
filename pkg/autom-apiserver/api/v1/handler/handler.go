@@ -1,8 +1,6 @@
 package handler
 
 import (
-	"net/http"
-
 	"github.com/atompi/autom/cmd/autom-apiserver/app/options"
 	"github.com/gin-gonic/gin"
 )
@@ -21,8 +19,4 @@ func NewHandler(handler HandlerFunc, opts options.Options) gin.HandlerFunc {
 		context.Options = opts
 		handler(context)
 	}
-}
-
-func Handler(c *Context) {
-	c.GinContext.JSON(http.StatusOK, gin.H{"status": c.Options})
 }

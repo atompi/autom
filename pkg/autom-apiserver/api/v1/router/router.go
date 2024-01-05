@@ -7,5 +7,5 @@ import (
 )
 
 func Register(engine *gin.Engine, opts options.Options) {
-	engine.GET(opts.API.Path, handler.NewHandler(handler.Handler, opts))
+	engine.GET("/ping", handler.NewHandler(handler.PingHandler, opts))
 }
