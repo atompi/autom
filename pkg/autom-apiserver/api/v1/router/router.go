@@ -7,5 +7,6 @@ import (
 )
 
 func Register(engine *gin.Engine, opts options.Options) {
-	engine.GET("/ping", handler.NewHandler(handler.PingHandler, opts))
+	engine.GET("ping", handler.NewHandler(handler.PingHandler, opts))
+	engine.GET("metrics", handler.NewHandler(handler.MetricsHandler, opts))
 }
