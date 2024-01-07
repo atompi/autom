@@ -7,6 +7,7 @@ import (
 )
 
 func Register(engine *gin.Engine, opts options.Options) {
+	engine.GET("metrics", handler.NewPromHandler())
+
 	engine.GET("ping", handler.NewHandler(handler.PingHandler, opts))
-	engine.GET("metrics", handler.NewHandler(handler.MetricsHandler, opts))
 }

@@ -3,6 +3,7 @@ package handler
 import (
 	"github.com/atompi/autom/cmd/autom-apiserver/app/options"
 	"github.com/gin-gonic/gin"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 type Context struct {
@@ -18,5 +19,12 @@ func NewHandler(handler HandlerFunc, opts options.Options) gin.HandlerFunc {
 		context.GinContext = c
 		context.Options = opts
 		handler(context)
+	}
+}
+
+func NewPromHandler() gin.HandlerFunc {
+	h := promhttp.Handler()
+	return func(c *gin.Context) {
+		h.ServeHTTP(c.Writer, c.Request)
 	}
 }

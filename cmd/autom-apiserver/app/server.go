@@ -22,6 +22,9 @@ import (
 
 	"github.com/atompi/autom/cmd/autom-apiserver/app/options"
 	"github.com/atompi/autom/pkg/autom-apiserver/api/v1/router"
+	promMetrics "github.com/atompi/autom/pkg/metrics/prometheus"
+	"github.com/atompi/autom/pkg/middleware"
+	metricsMiddleware "github.com/atompi/autom/pkg/middleware/metrics"
 	logkit "github.com/atompi/go-kits/log"
 	ginzap "github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
@@ -53,8 +56,15 @@ shared state through which all other components interact.`,
 		undo := zap.ReplaceGlobals(logger)
 		defer undo()
 
+		mm := middleware.New(
+			middleware.Config{
+				Recorder: promMetrics.NewRecorder(promMetrics.Config{}),
+			},
+		)
+
 		gin.SetMode(opts.Core.Mode)
 		r := gin.New()
+		r.Use(metricsMiddleware.Handler("", mm))
 		r.Use(ginzap.Ginzap(logger, time.RFC3339, true))
 		r.Use(ginzap.RecoveryWithZap(logger, true))
 		router.Register(r, opts)
