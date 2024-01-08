@@ -24,10 +24,23 @@ type RBACOptions struct {
 	Model string `yaml:"model"`
 }
 
+type EtcdTlsOptions struct {
+	Cert string `yaml:"cert"`
+	Key  string `yaml:"key"`
+	Ca   string `yaml:"ca"`
+}
+
+type EtcdOptions struct {
+	Endpoints   []string       `yaml:"endpoints"`
+	DialTimeout int            `yaml:"dial_timeout"`
+	Tls         EtcdTlsOptions `yaml:"tls"`
+}
+
 type APIServerOptions struct {
 	Listen string      `yaml:"listen"`
 	Path   string      `yaml:"path"`
 	RBAC   RBACOptions `yaml:"rbac"`
+	Etcd   EtcdOptions `yaml:"etcd"`
 }
 
 type Options struct {

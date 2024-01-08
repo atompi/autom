@@ -26,12 +26,13 @@ apiserver:
       [matchers]
       m = g(r.sub, p.sub, r.dom) && r.dom == p.dom && keyMatch2(r.obj, p.obj) && regexMatch(r.act, p.act)
 
-    etcd:
-      endpoints:
-        - etcd0
-        - etcd1
-        - etcd2
-      dial_timeout: 5
-      tls:
-        cert:
-        key:
+  etcd:
+    endpoints:
+      - https://etcd0:23790
+      - https://etcd1:23791
+      - https://etcd2:23792
+    dial_timeout: 5
+    tls:
+      cert: ./certs/etcd.pem
+      key: ./certs/etcd-key.pem
+      ca: ./certs/ca.pem

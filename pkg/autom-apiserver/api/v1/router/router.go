@@ -10,4 +10,5 @@ func Register(engine *gin.Engine, opts options.Options) {
 	engine.GET("metrics", handler.NewPromHandler())
 
 	engine.GET("ping", handler.NewHandler(handler.PingHandler, opts))
+	engine.GET("etcd_status", handler.NewHandler(handler.EtcdStatusHandler, opts))
 }
