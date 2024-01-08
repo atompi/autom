@@ -20,14 +20,19 @@ type CoreOptions struct {
 	Log     LogOptions `yaml:"log"`
 }
 
-type APIOptions struct {
-	Listen string `yaml:"listen"`
-	Path   string `yaml:"path"`
+type RBACOptions struct {
+	Model string `yaml:"model"`
+}
+
+type APIServerOptions struct {
+	Listen string      `yaml:"listen"`
+	Path   string      `yaml:"path"`
+	RBAC   RBACOptions `yaml:"rbac"`
 }
 
 type Options struct {
-	Core CoreOptions `yaml:"core"`
-	API  APIOptions  `yaml:"api"`
+	Core      CoreOptions      `yaml:"core"`
+	APIServer APIServerOptions `yaml:"apiserver"`
 }
 
 func NewOptions() (opts Options) {

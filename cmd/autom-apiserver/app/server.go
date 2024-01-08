@@ -68,7 +68,7 @@ shared state through which all other components interact.`,
 		r.Use(ginzap.Ginzap(logger, time.RFC3339, true))
 		r.Use(ginzap.RecoveryWithZap(logger, true))
 		router.Register(r, opts)
-		r.Run(opts.API.Listen)
+		r.Run(opts.APIServer.Listen)
 	},
 }
 
