@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc"
 )
 
-// New creates a new EtcdCluster client
+// New creates a new Etcd client
 func New(endpoints []string, ca, cert, key string, dialTimeout int) (*clientv3.Client, error) {
 	var err error
 	var tlsConfig *tls.Config
@@ -36,11 +36,10 @@ func New(endpoints []string, ca, cert, key string, dialTimeout int) (*clientv3.C
 	})
 }
 
-// CheckClusterHealth returns nil for status Up or error for status Down
-func CheckClusterHealth(c *clientv3.Client) (*clientv3.MemberListResponse, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+// GetMemberList returns members list of etcd cluster
+func GetMemberList(c *clientv3.Client, timeout int) (*clientv3.MemberListResponse, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(timeout)*time.Second)
 	resp, err := c.Cluster.MemberList(ctx)
 	cancel()
-	defer c.Close()
 	return resp, err
 }
