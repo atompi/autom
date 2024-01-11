@@ -1,10 +1,10 @@
 // Package gin is a helper package to get a gin compatible middleware.
-package metrics
+package handler
 
 import (
 	"context"
 
-	"github.com/atompi/autom/pkg/middleware"
+	"github.com/atompi/autom/pkg/metrics/middleware"
 	"github.com/gin-gonic/gin"
 )
 

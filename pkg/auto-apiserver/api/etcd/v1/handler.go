@@ -1,10 +1,10 @@
-package etcd
+package v1
 
 import (
 	"net/http"
 
-	"github.com/atompi/autom/pkg/autom-apiserver/api/v1/handler"
-	etcdutil "github.com/atompi/autom/pkg/util/etcd"
+	etcdutil "github.com/atompi/autom/pkg/auto-apiserver/util/etcd"
+	"github.com/atompi/autom/pkg/auto-apiserver/util/handler"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,6 +17,8 @@ func ListMembersHandler(c *handler.Context) {
 		opts.APIServer.Etcd.Tls.Key,
 		opts.APIServer.Etcd.DialTimeout,
 	)
+	defer etcdClient.Close()
+
 	if err != nil {
 		c.GinContext.JSON(http.StatusInternalServerError, gin.H{"response": "cannot create etcd client"})
 		return
@@ -26,6 +28,7 @@ func ListMembersHandler(c *handler.Context) {
 		c.GinContext.JSON(http.StatusInternalServerError, gin.H{"response": "etcd cluster not health"})
 		return
 	}
+
 	m := resp.Members
 	c.GinContext.JSON(http.StatusOK, gin.H{"response": m})
 }

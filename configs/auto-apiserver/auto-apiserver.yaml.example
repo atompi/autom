@@ -9,6 +9,8 @@ core:
 apiserver:
   listen: :1948
 
+  token: abc123
+
   rbac:
     model: |
       [request_definition]

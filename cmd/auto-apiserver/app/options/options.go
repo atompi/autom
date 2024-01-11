@@ -38,6 +38,7 @@ type EtcdOptions struct {
 
 type APIServerOptions struct {
 	Listen string      `yaml:"listen"`
+	Token  string      `yaml:"token"`
 	Path   string      `yaml:"path"`
 	RBAC   RBACOptions `yaml:"rbac"`
 	Etcd   EtcdOptions `yaml:"etcd"`

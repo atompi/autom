@@ -20,11 +20,11 @@ import (
 	"os"
 	"time"
 
-	"github.com/atompi/autom/cmd/autom-apiserver/app/options"
-	"github.com/atompi/autom/pkg/autom-apiserver/api/v1/router"
+	"github.com/atompi/autom/cmd/auto-apiserver/app/options"
+	"github.com/atompi/autom/pkg/auto-apiserver/api/router"
+	metricsHandler "github.com/atompi/autom/pkg/metrics/handler"
+	metricsMiddleware "github.com/atompi/autom/pkg/metrics/middleware"
 	promMetrics "github.com/atompi/autom/pkg/metrics/prometheus"
-	"github.com/atompi/autom/pkg/middleware"
-	metricsMiddleware "github.com/atompi/autom/pkg/middleware/metrics"
 	logkit "github.com/atompi/go-kits/log"
 	ginzap "github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
@@ -37,7 +37,7 @@ var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "autom-apiserver",
+	Use:   "auto-apiserver",
 	Short: "AutoM API server",
 	Long: `The AutoM API server validates and configures data
 for the api objects. The API Server services REST
@@ -56,18 +56,21 @@ shared state through which all other components interact.`,
 		undo := zap.ReplaceGlobals(logger)
 		defer undo()
 
-		mm := middleware.New(
-			middleware.Config{
+		mm := metricsMiddleware.New(
+			metricsMiddleware.Config{
 				Recorder: promMetrics.NewRecorder(promMetrics.Config{}),
 			},
 		)
 
 		gin.SetMode(opts.Core.Mode)
+
 		r := gin.New()
-		r.Use(metricsMiddleware.Handler("", mm))
+		r.Use(metricsHandler.Handler("", mm))
 		r.Use(ginzap.Ginzap(logger, time.RFC3339, true))
 		r.Use(ginzap.RecoveryWithZap(logger, true))
-		router.Register(r, opts)
+
+		router.ApiRouterGenerator(r)
+
 		r.Run(opts.APIServer.Listen)
 	},
 }
@@ -88,7 +91,7 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "config file (default is ./autom-apiserver.yaml)")
+	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "config file (default is ./auto-apiserver.yaml)")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -97,10 +100,10 @@ func initConfig() {
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
 	} else {
-		// Search config in home directory with name "autom-apiserver" (without extension).
+		// Search config in home directory with name "auto-apiserver" (without extension).
 		viper.AddConfigPath("./")
 		viper.SetConfigType("yaml")
-		viper.SetConfigName("autom-apiserver")
+		viper.SetConfigName("auto-apiserver")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
