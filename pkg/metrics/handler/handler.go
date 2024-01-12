@@ -5,11 +5,18 @@ import (
 	"context"
 
 	"github.com/atompi/autom/pkg/metrics/middleware"
+	"github.com/atompi/autom/pkg/metrics/prometheus"
 	"github.com/gin-gonic/gin"
 )
 
 // Handler returns a Gin measuring middleware.
-func Handler(handlerID string, m middleware.Middleware) gin.HandlerFunc {
+func Handler(handlerID string) gin.HandlerFunc {
+	m := middleware.New(
+		middleware.Config{
+			Recorder: prometheus.NewRecorder(prometheus.Config{}),
+		},
+	)
+
 	return func(c *gin.Context) {
 		r := &reporter{c: c}
 		m.Measure(handlerID, r, func() {

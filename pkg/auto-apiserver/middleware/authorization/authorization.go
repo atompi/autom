@@ -4,11 +4,11 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/atompi/autom/cmd/auto-apiserver/app/options"
 	"github.com/gin-gonic/gin"
-	"github.com/spf13/viper"
 )
 
-func TokenAuthMiddleware() gin.HandlerFunc {
+func TokenAuthMiddleware(opts options.APIServerOptions) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.Request.Header.Get("Authorization")
 		if authHeader == "" {
@@ -22,7 +22,7 @@ func TokenAuthMiddleware() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		if parts[1] != viper.GetString("apiserver.token") {
+		if parts[1] != opts.Token {
 			c.JSON(http.StatusForbidden, gin.H{"err": "invalid token"})
 			c.Abort()
 			return
