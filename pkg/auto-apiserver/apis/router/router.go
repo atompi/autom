@@ -7,8 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func ApisRouter(routeGroup *gin.RouterGroup, opts options.APIServerOptions) {
-	apisGroup := routeGroup.Group("/apis")
+func ApisRouter(routerGroup *gin.RouterGroup, opts options.APIServerOptions) {
+	apisGroup := routerGroup.Group("/apis")
 
 	etcd.Router(apisGroup, opts)
 	ping.Router(apisGroup, opts)

@@ -5,6 +5,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func MetricsRouter(routeGroup *gin.RouterGroup) {
-	routeGroup.GET("metrics", handler.NewPromHandler())
+func MetricsRouter(routerGroup *gin.RouterGroup) {
+	routerGroup.GET("metrics", handler.NewPromHandler())
 }
