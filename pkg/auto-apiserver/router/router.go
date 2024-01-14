@@ -1,18 +1,34 @@
 package router
 
 import (
-	"github.com/atompi/autom/cmd/auto-apiserver/app/options"
-	apisroutergroup "github.com/atompi/autom/pkg/auto-apiserver/apis/router"
-	metricsroutergroup "github.com/atompi/autom/pkg/auto-apiserver/metrics/router"
-	metrics "github.com/atompi/autom/pkg/metrics/handler"
+	etcd "github.com/atompi/autom/pkg/auto-apiserver/apis/etcd/v1"
+	ping "github.com/atompi/autom/pkg/auto-apiserver/apis/ping/v1"
+	metricshandler "github.com/atompi/autom/pkg/metrics/handler"
+	metricsroutergroup "github.com/atompi/autom/pkg/metrics/router"
+	"github.com/atompi/autom/pkg/options"
+	root "github.com/atompi/autom/pkg/router"
 	"github.com/gin-gonic/gin"
 )
 
-func Register(e *gin.Engine, opts options.APIServerOptions) {
-	e.Use(metrics.Handler(""))
+func ApisRouter(routerGroup *gin.RouterGroup, opts options.Options) {
+	apisGroup := routerGroup.Group("/apis")
 
-	rootRouterGroup := e.Group("/")
+	etcd.Router(apisGroup, opts)
+	ping.Router(apisGroup, opts)
+}
 
-	metricsroutergroup.MetricsRouter(rootRouterGroup)
-	apisroutergroup.ApisRouter(rootRouterGroup, opts)
+func Register(e *gin.Engine, opts options.Options) {
+	routerGroupFuncs := []root.RouterGroupFunc{}
+
+	if opts.APIServer.Metrics.Enable {
+		e.Use(metricshandler.Handler(""))
+		routerGroupFuncs = append(routerGroupFuncs, metricsroutergroup.MetricsRouter)
+	}
+
+	routerGroupFuncs = append(
+		routerGroupFuncs,
+		ApisRouter,
+	)
+
+	root.Register(e, opts, routerGroupFuncs)
 }

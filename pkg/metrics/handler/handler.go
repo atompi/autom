@@ -7,7 +7,15 @@ import (
 	"github.com/atompi/autom/pkg/metrics/middleware"
 	"github.com/atompi/autom/pkg/metrics/prometheus"
 	"github.com/gin-gonic/gin"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
+
+func NewPromHandler() gin.HandlerFunc {
+	h := promhttp.Handler()
+	return func(c *gin.Context) {
+		h.ServeHTTP(c.Writer, c.Request)
+	}
+}
 
 // Handler returns a Gin measuring middleware.
 func Handler(handlerID string) gin.HandlerFunc {

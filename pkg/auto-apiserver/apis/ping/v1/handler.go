@@ -3,7 +3,7 @@ package v1
 import (
 	"net/http"
 
-	"github.com/atompi/autom/pkg/auto-apiserver/handler"
+	"github.com/atompi/autom/pkg/handler"
 	"github.com/gin-gonic/gin"
 )
 

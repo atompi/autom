@@ -20,8 +20,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/atompi/autom/cmd/auto-apiserver/app/options"
 	"github.com/atompi/autom/pkg/auto-apiserver/router"
+	"github.com/atompi/autom/pkg/options"
 	logkit "github.com/atompi/go-kits/log"
 	ginzap "github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
@@ -60,7 +60,7 @@ shared state through which all other components interact.`,
 		r.Use(ginzap.Ginzap(logger, time.RFC3339, true))
 		r.Use(ginzap.RecoveryWithZap(logger, true))
 
-		router.Register(r, opts.APIServer)
+		router.Register(r, opts)
 
 		r.Run(opts.APIServer.Listen)
 	},

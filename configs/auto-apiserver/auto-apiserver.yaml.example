@@ -3,13 +3,17 @@ core:
   threads: 4
   log:
     level: INFO
-    path: ./logs/autom-apiserver.log
+    path: ./logs/auto-apiserver.log
 
 
 apiserver:
   listen: :1948
 
   token: abc123
+
+  metrics:
+    enable: true
+    path: /metrics
 
   rbac:
     model: |

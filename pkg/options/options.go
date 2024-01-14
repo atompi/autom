@@ -36,12 +36,17 @@ type EtcdOptions struct {
 	Tls         EtcdTlsOptions `yaml:"tls"`
 }
 
+type MetricsOptions struct {
+	Enable bool   `yaml:"enable"`
+	Path   string `yaml:"path"`
+}
+
 type APIServerOptions struct {
-	Listen string      `yaml:"listen"`
-	Token  string      `yaml:"token"`
-	Path   string      `yaml:"path"`
-	RBAC   RBACOptions `yaml:"rbac"`
-	Etcd   EtcdOptions `yaml:"etcd"`
+	Listen  string         `yaml:"listen"`
+	Token   string         `yaml:"token"`
+	RBAC    RBACOptions    `yaml:"rbac"`
+	Etcd    EtcdOptions    `yaml:"etcd"`
+	Metrics MetricsOptions `yaml:"metrics"`
 }
 
 type Options struct {

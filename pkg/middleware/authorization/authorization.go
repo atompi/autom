@@ -4,11 +4,10 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/atompi/autom/cmd/auto-apiserver/app/options"
 	"github.com/gin-gonic/gin"
 )
 
-func TokenAuthMiddleware(opts options.APIServerOptions) gin.HandlerFunc {
+func TokenAuthMiddleware(token string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.Request.Header.Get("Authorization")
 		if authHeader == "" {
@@ -22,7 +21,7 @@ func TokenAuthMiddleware(opts options.APIServerOptions) gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		if parts[1] != opts.Token {
+		if parts[1] != token {
 			c.JSON(http.StatusForbidden, gin.H{"err": "invalid token"})
 			c.Abort()
 			return
