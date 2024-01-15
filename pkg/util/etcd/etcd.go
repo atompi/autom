@@ -1,7 +1,6 @@
 package etcd
 
 import (
-	"context"
 	"crypto/tls"
 	"time"
 
@@ -34,12 +33,4 @@ func New(endpoints []string, ca, cert, key string, dialTimeout int) (*clientv3.C
 		},
 		TLS: tlsConfig,
 	})
-}
-
-// GetMemberList returns members list of etcd cluster
-func GetMemberList(c *clientv3.Client, timeout int) (*clientv3.MemberListResponse, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(timeout)*time.Second)
-	resp, err := c.Cluster.MemberList(ctx)
-	cancel()
-	return resp, err
 }

@@ -17,15 +17,15 @@ func ListMembersHandler(c *handler.Context) {
 		opts.APIServer.Etcd.Tls.Key,
 		opts.APIServer.Etcd.DialTimeout,
 	)
-	defer etcdClient.Close()
-
 	if err != nil {
 		c.GinContext.JSON(http.StatusInternalServerError, gin.H{"response": "cannot create etcd client"})
 		return
 	}
-	resp, err := etcdutil.GetMemberList(etcdClient, opts.APIServer.Etcd.DialTimeout)
+	defer etcdClient.Close()
+
+	resp, err := GetMemberList(etcdClient, opts.APIServer.Etcd.DialTimeout)
 	if err != nil {
-		c.GinContext.JSON(http.StatusInternalServerError, gin.H{"response": "etcd cluster not health"})
+		c.GinContext.JSON(http.StatusInternalServerError, gin.H{"response": "cannot list etcd members"})
 		return
 	}
 
