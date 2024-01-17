@@ -1,12 +1,12 @@
 package v1
 
 import (
-	"io"
 	"net/http"
 
 	"github.com/atompi/autom/pkg/handler"
 	etcdutil "github.com/atompi/autom/pkg/util/etcd"
 	"github.com/gin-gonic/gin"
+	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 func ListMembersHandler(c *handler.Context) {
@@ -49,16 +49,26 @@ func GetHandler(c *handler.Context) {
 	}
 	defer etcdClient.Close()
 
-	b, err := io.ReadAll(c.GinContext.Request.Body)
+	j := make(map[string]string)
+	err = c.GinContext.BindJSON(&j)
 	if err != nil {
-		c.GinContext.JSON(http.StatusInternalServerError, gin.H{"response": "cannot read request body"})
+		c.GinContext.JSON(http.StatusBadRequest, gin.H{"response": "bad request, body must be in json format"})
 		return
 	}
-	key := string(b)
-
-	resp, err := Get(etcdClient, key, opts.APIServer.Etcd.DialTimeout)
+	key, ok := j["key"]
+	if !ok {
+		c.GinContext.JSON(http.StatusBadRequest, gin.H{"response": "bad request, no key"})
+		return
+	}
+	prefix := j["prefix"]
+	var resp *clientv3.GetResponse
+	if prefix == "true" {
+		resp, err = GetWithPrefix(etcdClient, key, opts.APIServer.Etcd.DialTimeout)
+	} else {
+		resp, err = Get(etcdClient, key, opts.APIServer.Etcd.DialTimeout)
+	}
 	if err != nil {
-		c.GinContext.JSON(http.StatusInternalServerError, gin.H{"response": "cannot list etcd members"})
+		c.GinContext.JSON(http.StatusInternalServerError, gin.H{"response": "get key value failed"})
 		return
 	}
 	c.GinContext.JSON(http.StatusOK, gin.H{"response": resp})
