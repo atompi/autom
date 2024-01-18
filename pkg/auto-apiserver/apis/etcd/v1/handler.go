@@ -73,3 +73,42 @@ func GetHandler(c *handler.Context) {
 	}
 	c.GinContext.JSON(http.StatusOK, gin.H{"response": resp})
 }
+
+func PutHandler(c *handler.Context) {
+	opts := c.Options
+	etcdClient, err := etcdutil.New(
+		opts.APIServer.Etcd.Endpoints,
+		opts.APIServer.Etcd.Tls.Ca,
+		opts.APIServer.Etcd.Tls.Cert,
+		opts.APIServer.Etcd.Tls.Key,
+		opts.APIServer.Etcd.DialTimeout,
+	)
+	if err != nil {
+		c.GinContext.JSON(http.StatusInternalServerError, gin.H{"response": "cannot create etcd client"})
+		return
+	}
+	defer etcdClient.Close()
+
+	j := make(map[string]string)
+	err = c.GinContext.BindJSON(&j)
+	if err != nil {
+		c.GinContext.JSON(http.StatusBadRequest, gin.H{"response": "bad request, body must be in json format"})
+		return
+	}
+	key, ok := j["key"]
+	if !ok {
+		c.GinContext.JSON(http.StatusBadRequest, gin.H{"response": "bad request, no key"})
+		return
+	}
+	value, ok := j["value"]
+	if !ok {
+		c.GinContext.JSON(http.StatusBadRequest, gin.H{"response": "bad request, no value"})
+		return
+	}
+	resp, err := Put(etcdClient, key, value, opts.APIServer.Etcd.DialTimeout)
+	if err != nil {
+		c.GinContext.JSON(http.StatusInternalServerError, gin.H{"response": "put key value failed"})
+		return
+	}
+	c.GinContext.JSON(http.StatusOK, gin.H{"response": resp})
+}
