@@ -6,7 +6,6 @@ import (
 	"github.com/atompi/autom/pkg/handler"
 	etcdutil "github.com/atompi/autom/pkg/util/etcd"
 	"github.com/gin-gonic/gin"
-	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 func ListMembersHandler(c *handler.Context) {
@@ -61,17 +60,17 @@ func GetHandler(c *handler.Context) {
 		return
 	}
 	prefix := j["prefix"]
-	var resp *clientv3.GetResponse
+	var res []map[string]string
 	if prefix == "true" {
-		resp, err = GetWithPrefix(etcdClient, key, opts.APIServer.Etcd.DialTimeout)
+		res, err = Get(etcdClient, true, key, opts.APIServer.Etcd.DialTimeout)
 	} else {
-		resp, err = Get(etcdClient, key, opts.APIServer.Etcd.DialTimeout)
+		res, err = Get(etcdClient, false, key, opts.APIServer.Etcd.DialTimeout)
 	}
 	if err != nil {
 		c.GinContext.JSON(http.StatusInternalServerError, gin.H{"response": "get key value failed"})
 		return
 	}
-	c.GinContext.JSON(http.StatusOK, gin.H{"response": resp})
+	c.GinContext.JSON(http.StatusOK, gin.H{"response": res})
 }
 
 func PutHandler(c *handler.Context) {

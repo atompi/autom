@@ -15,22 +15,30 @@ func GetMemberList(c *clientv3.Client, timeout int) (*clientv3.MemberListRespons
 	return resp, err
 }
 
-func Get(c *clientv3.Client, key string, timeout int) (*clientv3.GetResponse, error) {
+func Get(c *clientv3.Client, prefix bool, key string, timeout int) (res []map[string]string, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(timeout)*time.Second)
-	resp, err := c.Get(ctx, key)
+	var resp *clientv3.GetResponse
+	if prefix {
+		resp, err = c.Get(
+			ctx,
+			key,
+			clientv3.WithPrefix(),
+		)
+	} else {
+		resp, err = c.Get(ctx, key)
+	}
 	cancel()
-	return resp, err
-}
+	if err != nil {
+		return
+	}
 
-func GetWithPrefix(c *clientv3.Client, key string, timeout int) (*clientv3.GetResponse, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(timeout)*time.Second)
-	resp, err := c.Get(
-		ctx,
-		key,
-		clientv3.WithPrefix(),
-	)
-	cancel()
-	return resp, err
+	kvs := resp.Kvs
+	for _, kv := range kvs {
+		r := map[string]string{}
+		r[string(kv.Key)] = string(kv.Value)
+		res = append(res, r)
+	}
+	return
 }
 
 func Put(c *clientv3.Client, key string, value string, timeout int) (*clientv3.PutResponse, error) {
