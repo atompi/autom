@@ -13,5 +13,6 @@ func Router(routerGroup *gin.RouterGroup, opts options.Options) {
 	{
 		EtcdGroup.GET("/members", authorization.TokenAuthMiddleware(opts.APIServer.Token), handler.NewHandler(ListMembersHandler, opts))
 		EtcdGroup.GET("/get", authorization.TokenAuthMiddleware(opts.APIServer.Token), handler.NewHandler(GetHandler, opts))
+		EtcdGroup.PUT("/put", authorization.TokenAuthMiddleware(opts.APIServer.Token), handler.NewHandler(PutHandler, opts))
 	}
 }
