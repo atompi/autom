@@ -10,13 +10,7 @@ import (
 
 func ListMembersHandler(c *handler.Context) {
 	opts := c.Options
-	etcdClient, err := etcdutil.New(
-		opts.APIServer.Etcd.Endpoints,
-		opts.APIServer.Etcd.Tls.Ca,
-		opts.APIServer.Etcd.Tls.Cert,
-		opts.APIServer.Etcd.Tls.Key,
-		opts.APIServer.Etcd.DialTimeout,
-	)
+	etcdClient, err := etcdutil.New(opts.APIServer.Etcd)
 	if err != nil {
 		c.GinContext.JSON(http.StatusInternalServerError, gin.H{"response": "cannot create etcd client"})
 		return
@@ -35,13 +29,7 @@ func ListMembersHandler(c *handler.Context) {
 
 func GetHandler(c *handler.Context) {
 	opts := c.Options
-	etcdClient, err := etcdutil.New(
-		opts.APIServer.Etcd.Endpoints,
-		opts.APIServer.Etcd.Tls.Ca,
-		opts.APIServer.Etcd.Tls.Cert,
-		opts.APIServer.Etcd.Tls.Key,
-		opts.APIServer.Etcd.DialTimeout,
-	)
+	etcdClient, err := etcdutil.New(opts.APIServer.Etcd)
 	if err != nil {
 		c.GinContext.JSON(http.StatusInternalServerError, gin.H{"response": "cannot create etcd client"})
 		return
@@ -75,13 +63,7 @@ func GetHandler(c *handler.Context) {
 
 func PutHandler(c *handler.Context) {
 	opts := c.Options
-	etcdClient, err := etcdutil.New(
-		opts.APIServer.Etcd.Endpoints,
-		opts.APIServer.Etcd.Tls.Ca,
-		opts.APIServer.Etcd.Tls.Cert,
-		opts.APIServer.Etcd.Tls.Key,
-		opts.APIServer.Etcd.DialTimeout,
-	)
+	etcdClient, err := etcdutil.New(opts.APIServer.Etcd)
 	if err != nil {
 		c.GinContext.JSON(http.StatusInternalServerError, gin.H{"response": "cannot create etcd client"})
 		return

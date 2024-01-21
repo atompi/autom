@@ -42,3 +42,4 @@ apiserver:
       cert: ./certs/etcd.pem
       key: ./certs/etcd-key.pem
       ca: ./certs/ca.pem
+      insecure_skip_verify: false

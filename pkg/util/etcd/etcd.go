@@ -4,30 +4,37 @@ import (
 	"crypto/tls"
 	"time"
 
+	"github.com/atompi/autom/pkg/options"
 	"go.etcd.io/etcd/client/pkg/v3/transport"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"google.golang.org/grpc"
 )
 
 // New creates a new Etcd client
-func New(endpoints []string, ca, cert, key string, dialTimeout int) (*clientv3.Client, error) {
+func New(opts options.EtcdOptions) (*clientv3.Client, error) {
 	var err error
 	var tlsConfig *tls.Config
-	if ca != "" || cert != "" || key != "" {
-		tlsInfo := transport.TLSInfo{
-			CertFile:      cert,
-			KeyFile:       key,
-			TrustedCAFile: ca,
+	var tlsInfo transport.TLSInfo
+	if !opts.Tls.InsecureSkipVerify {
+		tlsInfo = transport.TLSInfo{
+			CertFile:           opts.Tls.Cert,
+			KeyFile:            opts.Tls.Key,
+			TrustedCAFile:      opts.Tls.Ca,
+			InsecureSkipVerify: opts.Tls.InsecureSkipVerify,
 		}
-		tlsConfig, err = tlsInfo.ClientConfig()
-		if err != nil {
-			return nil, err
+	} else {
+		tlsInfo = transport.TLSInfo{
+			InsecureSkipVerify: true,
 		}
+	}
+	tlsConfig, err = tlsInfo.ClientConfig()
+	if err != nil {
+		return nil, err
 	}
 
 	return clientv3.New(clientv3.Config{
-		Endpoints:   endpoints,
-		DialTimeout: time.Duration(dialTimeout) * time.Second,
+		Endpoints:   opts.Endpoints,
+		DialTimeout: time.Duration(opts.DialTimeout) * time.Second,
 		DialOptions: []grpc.DialOption{
 			grpc.WithBlock(), // block until the underlying connection is up
 		},

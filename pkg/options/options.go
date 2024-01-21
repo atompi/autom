@@ -25,9 +25,10 @@ type RBACOptions struct {
 }
 
 type EtcdTlsOptions struct {
-	Cert string `yaml:"cert"`
-	Key  string `yaml:"key"`
-	Ca   string `yaml:"ca"`
+	Cert               string `yaml:"cert"`
+	Key                string `yaml:"key"`
+	Ca                 string `yaml:"ca"`
+	InsecureSkipVerify bool   `yaml:"insecure_skip_verify"`
 }
 
 type EtcdOptions struct {
