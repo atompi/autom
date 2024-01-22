@@ -1,7 +1,7 @@
 # AutoM
 
 <p align="center">
-    <img width="128" height="128" src="docs/logo.svg">
+    <img width="128" height="128" src="docs/imgs/logo.svg">
 </p>
 
 Next-generation XOps platform, born to empower the happiness of Site Reliability Engineers (SREs).
