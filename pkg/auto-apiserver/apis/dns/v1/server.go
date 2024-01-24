@@ -2,6 +2,7 @@ package v1
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	clientv3 "go.etcd.io/etcd/client/v3"
@@ -13,7 +14,8 @@ func GetOrigins(c *clientv3.Client, key string, timeout int) (res []string, err 
 	resp, err = c.Get(
 		ctx,
 		key,
-		clientv3.WithRange("@"),
+		clientv3.WithKeysOnly(),
+		clientv3.WithPrefix(),
 	)
 	cancel()
 	if err != nil {
@@ -22,7 +24,11 @@ func GetOrigins(c *clientv3.Client, key string, timeout int) (res []string, err 
 
 	kvs := resp.Kvs
 	for _, kv := range kvs {
-		res = append(res, string(kv.Key))
+		k := string(kv.Key)
+		if strings.Count(k, "/") > 2 {
+			continue
+		}
+		res = append(res, k[len(key):])
 	}
 	return
 }

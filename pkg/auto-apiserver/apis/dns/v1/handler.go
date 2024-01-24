@@ -16,7 +16,7 @@ func ListOriginsHandler(c *handler.Context) {
 		return
 	}
 	defer etcdClient.Close()
-	res, err := GetOrigins(etcdClient, "/dns", opts.APIServer.Etcd.DialTimeout)
+	res, err := GetOrigins(etcdClient, "/dns/", opts.APIServer.Etcd.DialTimeout)
 	if err != nil {
 		c.GinContext.JSON(http.StatusInternalServerError, gin.H{"response": "get key value failed"})
 		return
