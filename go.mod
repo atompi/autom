@@ -4,6 +4,7 @@ go 1.21.3
 
 require (
 	github.com/alibabacloud-go/darabonba-openapi/v2 v2.0.5
+	github.com/alibabacloud-go/resourcecenter-20221201 v1.2.0
 	github.com/alibabacloud-go/tag-20180828/v2 v2.0.2
 	github.com/alibabacloud-go/tea v1.2.2
 	github.com/alibabacloud-go/tea-utils/v2 v2.0.4
