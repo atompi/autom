@@ -35,6 +35,7 @@ type EtcdOptions struct {
 	Endpoints   []string       `yaml:"endpoints"`
 	DialTimeout int            `yaml:"dial_timeout"`
 	Tls         EtcdTlsOptions `yaml:"tls"`
+	Prefix      string         `yaml:"prefix"`
 }
 
 type MetricsOptions struct {

@@ -38,6 +38,7 @@ apiserver:
       - https://etcd1:23791
       - https://etcd2:23792
     dial_timeout: 5
+    prefix: /autom/
     tls:
       cert: ./certs/etcd.pem
       key: ./certs/etcd-key.pem
