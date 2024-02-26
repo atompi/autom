@@ -7,7 +7,7 @@ import (
 	metricshandler "github.com/atompi/autom/pkg/metrics/handler"
 	metricsroutergroup "github.com/atompi/autom/pkg/metrics/router"
 	"github.com/atompi/autom/pkg/options"
-	root "github.com/atompi/autom/pkg/router"
+	rootrouter "github.com/atompi/autom/pkg/router"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,7 +20,7 @@ func ApisRouter(routerGroup *gin.RouterGroup, opts options.Options) {
 }
 
 func Register(e *gin.Engine, opts options.Options) {
-	routerGroupFuncs := []root.RouterGroupFunc{}
+	routerGroupFuncs := []rootrouter.RouterGroupFunc{}
 
 	if opts.APIServer.Metrics.Enable {
 		e.Use(metricshandler.Handler(""))
@@ -32,5 +32,5 @@ func Register(e *gin.Engine, opts options.Options) {
 		ApisRouter,
 	)
 
-	root.Register(e, opts, routerGroupFuncs)
+	rootrouter.Register(e, opts, routerGroupFuncs)
 }
