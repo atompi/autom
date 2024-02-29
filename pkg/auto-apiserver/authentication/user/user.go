@@ -18,11 +18,36 @@ type Info interface {
 	// authenticator/authorizer pair making use of them.
 	// For instance: "example.org/foo" instead of "foo"
 	// This is a map[string][]string because it needs to be serializeable into
-	// a SubjectAccessReviewSpec.authorization.k8s.io for proper authorization
+	// a SubjectAccessReviewSpec.authorization.autom.atompi.com for proper authorization
 	// delegation flows
 	// In order to faithfully round-trip through an impersonation flow, these keys
 	// MUST be lowercase.
 	GetExtra() map[string][]string
+}
+
+// DefaultInfo provides a simple user information exchange object
+// for components that implement the UserInfo interface.
+type DefaultInfo struct {
+	Name   string
+	UID    string
+	Groups []string
+	Extra  map[string][]string
+}
+
+func (i *DefaultInfo) GetName() string {
+	return i.Name
+}
+
+func (i *DefaultInfo) GetUID() string {
+	return i.UID
+}
+
+func (i *DefaultInfo) GetGroups() []string {
+	return i.Groups
+}
+
+func (i *DefaultInfo) GetExtra() map[string][]string {
+	return i.Extra
 }
 
 // well-known user and group names
@@ -35,4 +60,8 @@ const (
 
 	Anonymous     = "system:anonymous"
 	APIServerUser = "system:apiserver"
+
+	// core autom process identities
+	AutoControllerManager = "system:auto-controller-manager"
+	AutoScheduler         = "system:auto-scheduler"
 )
