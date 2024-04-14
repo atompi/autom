@@ -2,8 +2,8 @@ package v1
 
 import (
 	"github.com/atompi/autom/pkg/handler"
-	"github.com/atompi/autom/pkg/middleware/authorization"
 	"github.com/atompi/autom/pkg/options"
+	"github.com/atompi/go-kits/authorization"
 
 	"github.com/gin-gonic/gin"
 )
